@@ -8,7 +8,7 @@ FROM ubuntu:16.04 as builder
 ARG BUILD_DATE
 ARG VCS_REF
 
-ARG BRANCH=2.1.0.1
+ARG BRANCH=master
 ENV BRANCH=${BRANCH}
 
 RUN set -ex && \
