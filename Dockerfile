@@ -35,6 +35,7 @@ RUN mkdir -p /daemon/data
 
 # Install Daemon
 WORKDIR /daemon/
+
 RUN curl -L -o daemon.zip https://github.com/ipbc-dev/bittube/releases/download/2.1.0.1/bittube-linux-x64-v2.1.0.1.zip \
   && unzip daemon.zip -d /daemon \
   && chown -R daemon /daemon \
@@ -52,7 +53,5 @@ VOLUME /root/.bittube
 # cd /wallet
 # bittube-wallet-cli
 VOLUME /wallet
-
-COPY /daemon/* /usr/local/bin/
 
 ENTRYPOINT ["bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"]
