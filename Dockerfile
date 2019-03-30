@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:16.04
 
 LABEL maintainer="blocktec"
 
@@ -41,7 +41,18 @@ RUN curl -L -o daemon.zip https://github.com/ipbc-dev/bittube/releases/download/
   && chmod +x /daemon/* \
   && rm -f daemon.zip
 
-USER daemon
-
 EXPOSE 18080 18081 18082
+
 VOLUME [ "/daemon/data" ]
+
+# Contains the blockchain
+VOLUME /root/.bittube
+
+# Generate your wallet via accessing the container and run:
+# cd /wallet
+# bittube-wallet-cli
+VOLUME /wallet
+
+COPY /daemon/* /usr/local/bin/
+
+ENTRYPOINT ["bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"]
