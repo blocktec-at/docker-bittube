@@ -1,17 +1,13 @@
 # Multistage docker build, requires docker 17.05
 
 # builder stage
-FROM ubuntu:16.04 as builder
+FROM ubuntu:16.04
 
 ARG BUILD_DATE
 ARG VCS_REF
 
 ARG BRANCH=2.1.0.1
 ENV BRANCH=${BRANCH}		  
-		   
-
-				  
-					
 
 RUN set -ex && \
     apt-get update && \
@@ -59,11 +55,6 @@ RUN rm -rf build && \
 
 COPY . .
 
-# runtime stage
-FROM ubuntu:16.04
-ARG BUILD_DATE
-ARG VCS_REF
-
 # Good docker practice, plus we get microbadger badges
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/blocktec-at/docker-bittube.git" \
@@ -77,7 +68,7 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt
 
-COPY --from=builder /src/build/release/bin /usr/local/bin/
+COPY /build/release/bin /usr/local/bin/
 
 # Contains the blockchain
 VOLUME /root/.bittube
