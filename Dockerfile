@@ -68,7 +68,7 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt
 
-COPY /src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/* /usr/local/bin/
+#COPY /src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/* /usr/local/bin/
 
 # Contains the blockchain
 VOLUME /root/.bittube
@@ -81,4 +81,4 @@ VOLUME /wallet
 EXPOSE 18080
 EXPOSE 18081
 
-ENTRYPOINT ["bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"] 
+ENTRYPOINT ["/src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"] 
