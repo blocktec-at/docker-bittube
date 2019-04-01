@@ -68,7 +68,7 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt
 
-COPY /build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/* /usr/local/bin/
+COPY /src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/* /usr/local/bin/
 
 # Contains the blockchain
 VOLUME /root/.bittube
