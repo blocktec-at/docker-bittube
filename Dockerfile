@@ -51,7 +51,11 @@ RUN git clone --recursive https://github.com/ipbc-dev/bittube.git /src
 
 WORKDIR /src
 
-RUN git submodule init && git submodule update && git checkout 2.1.0.1 && make
+RUN git submodule init && git submodule update && git checkout 2.1.0.1
+
+ARG NPROC
+RUN rm -rf build && \
+    if [ -z "$NPROC" ];then make -j$(nproc);else make -j$NPROC;fi
 
 COPY . .
 
