@@ -1,4 +1,4 @@
-FROM debian:8
+FROM debian:stretch-slim
 #ubuntu:16.04
 
 ARG BUILD_DATE
