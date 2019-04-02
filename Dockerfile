@@ -3,8 +3,8 @@
 # builder stage
 FROM ubuntu:16.04 as builder
 
-RUN  apt-get update && \
-	 apt-get upgrade && \
+RUN  set -ex && \
+    apt-get update && \
     apt-get --no-install-recommends --yes install \
         ca-certificates \
         cmake \
