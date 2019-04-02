@@ -1,4 +1,5 @@
-FROM ubuntu:16.04
+FROM debian:8
+#ubuntu:16.04
 
 ARG BUILD_DATE
 ARG VCS_REF
