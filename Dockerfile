@@ -59,7 +59,21 @@ LABEL org.label-schema.name = "bittube daemon and cli" \
 
 RUN set -ex && \
     apt-get update && \
-    apt-get --no-install-recommends --yes install ca-certificates && \
+    apt-get --no-install-recommends --yes install ca-certificates \
+    libboost-all-dev \
+	libssl-dev \
+	libzmq3-dev \
+	libunbound-dev \
+	libsodium-dev \
+	libunwind8-dev \
+	liblzma-dev \
+	libreadline6-dev \
+	libldns-dev \
+	libexpat1-dev \
+	libpgm-dev \
+	curl \
+        libtool-bin \
+	bzip2 && \
     apt-get clean && \
     rm -rf /var/lib/apt
 
