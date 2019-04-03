@@ -1,5 +1,4 @@
-FROM debian:stretch-slim
-#ubuntu:16.04
+FROM ubuntu:16.04
 
 ARG BUILD_DATE
 ARG VCS_REF
