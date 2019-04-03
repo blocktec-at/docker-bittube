@@ -1,10 +1,10 @@
-FROM ubuntu:16.04
+FROM ubuntu:16.04 as builder
 
 ARG BUILD_DATE
 ARG VCS_REF
 
-ARG BRANCH=2.1.0.1
-ENV BRANCH=${BRANCH}		  
+ARG REPO=ipbc-dev/bittube
+ENV REPO=${REPO}	  
 
 RUN set -ex && \
     apt-get update && \
@@ -37,23 +37,21 @@ RUN set -ex && \
         xsltproc \
         gperf \
         unzip
-
-WORKDIR /usr/local
-
-RUN git clone --recursive https://github.com/ipbc-dev/bittube.git /src
-
-WORKDIR /src
-
-RUN git submodule init && git submodule update && git checkout 2.1.0.1
-
 ARG NPROC
-RUN rm -rf build && \
+RUN TAG=$(curl -L --silent "https://api.github.com/repos/$REPO/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') && \
+    git clone --single-branch --branch $TAG https://github.com/$REPO /src && \	
+    cd /src && \
+	git submodule init && \ 
+	git submodule update && \
+	rm -rf build && \        
     if [ -z "$NPROC" ];then make -j$(nproc);else make -j$NPROC;fi
 
-COPY . .
+FROM ubuntu:16.04
+
 
 # Good docker practice, plus we get microbadger badges
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL org.label-schema.name = "bittube daemon and cli" \
+	  org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/blocktec-at/docker-bittube.git" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.schema-version="2.2-r1"							 
@@ -65,7 +63,7 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt
 
-#COPY /src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/* /usr/local/bin/
+COPY --from=builder /src/build/Linux/_no_branch_/release/bin/* /usr/local/bin/
 
 # Contains the blockchain
 VOLUME /root/.bittube
@@ -78,4 +76,4 @@ VOLUME /wallet
 EXPOSE 18080
 EXPOSE 18081
 
-ENTRYPOINT ["/src/build/Linux/_HEAD_detached_at_2.1.0.1_/release/bin/bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"] 
+ENTRYPOINT ["bittubed", "--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18080", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18081", "--non-interactive", "--confirm-external-bind"] 
